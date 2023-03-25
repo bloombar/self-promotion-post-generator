@@ -1,4 +1,4 @@
-import os, random, requests
+import glob, os, random, requests
 from datetime import datetime
 from dotenv import load_dotenv
 import openai
@@ -6,44 +6,40 @@ from PIL import Image, ImageFont, ImageDraw
 
 load_dotenv()
 
+IMAGE_WIDTH = 1024 # OpenAI supports 1024x1024 images
+IMAGE_HEIGHT = 1024
+IMAGE_PADDING = 20 # spacing between text and image border
+
 def openai_connect():
   '''
   Connects to OpenAI API using the key in the .env file
   '''
   openai.api_key = os.getenv("OPENAI_API_KEY")
-  print(f'Using API key: {openai.api_key}')
+  # print(f'Using API key: {openai.api_key}')
   # models = openai.Model.list()
-
-def random_choice(the_list):
-  '''
-  Returns a random value from a list
-  @param the_list: a list of values
-  '''
-  value = the_list[random.randint(0, len(the_list) - 1)]
-  return value
 
 # prompt settings
 adjective_pool = ['social', 'cloud', 'community', 'naturopathic', 'diverse', 'integrative', 'machine', 'clean', 'data', 'education', 'academic', 'experience', 'software', 'data', 'plant-based', 'mycological', 'sustainable', 'green', 'ethical', "electric", 'product', 'user experience', 'innovation', 'computer-assisted', 'equity']
 topic_pool = ["learning", "science", 'STEM', "automation", "innovation", "design", 'thinking', "development", "technology", 'programming', 'introspection', "privacy", 'AI', 'mining', 'insights', 'unicycling', 'design', 'innovation', 'entrepreneurship', 'fabrication', 'power']
-action_pool = ['shipping', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
-utterance_type_pool = ['announcing', 'saying how proud i am of', 'telling you about', 'sharing', 'helping you to understand', 'not too proud to say']
-event_pool = ['product launch', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
+action_pool = ['shipping', 'showing', 'debating', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'funding', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
+utterance_type_pool = ['announcing', 'saying how proud i am of', 'telling you about', 'sharing', 'super hyped to share', 'riffing', 'helping you to understand', 'not too proud to say']
+event_pool = ['product launch', 'incubator', 'mentorship', 'panel', 'quest', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
 people_pool = ["business people", "yoga gurus", "young adults in tee shirts", "diverse children", "a beautiful woman", "academics", "women over 50", "middle-aged men"]
-object_pool = ["computer", "phone", "futuristic device", "electric unicycle", "loom", 'drone', 'flower', 'gear', 'supernatural power', 'cloud', 'antique tv', 'fjord', 'old wooden house', 'hammer', 'sickle', 'sun']
+object_pool = ["computer", "phone", "futuristic device", "electric unicycle", "loom", 'ship', 'drone', 'flower', 'gear', 'supernatural power', 'cloud', 'antique tv', 'fjord', 'old wooden house', 'hammer', 'sickle', 'sun']
 image_type_pool = ['photo', 'drawing', 'painting', 'sketch', 'illustration', 'infographic', 'chart']
-image_style_pool = ['brutalist', 'black-and-white', 'landscape', 'futuristic', 'modernist', 'greek', 'surreal', 'pop art', 'photorealistic', 'cubist']
+image_style_pool = ['soviet brutalist', 'black-and-white', 'landscape', 'futuristic', 'wide-angle', 'surreal', 'pop art', 'photorealistic', 'cubist']
 
 def random_prompt():
   # randomize prompt settings
   prompt = {
-    "topic": f'{random_choice(adjective_pool)} {random_choice(topic_pool)}',
-    "action": random_choice(action_pool),
-    'utterance_type': random_choice(utterance_type_pool),
-    "event_type": random_choice(event_pool),
-    "people": random_choice(people_pool),
-    "object": random_choice(object_pool),
-    "image_style": random_choice(image_style_pool),
-    "image_type": random_choice(image_type_pool)
+    "topic": f'{random.choice(adjective_pool)} {random.choice(topic_pool)}',
+    "action": random.choice(action_pool),
+    'utterance_type': random.choice(utterance_type_pool),
+    "event_type": random.choice(event_pool),
+    "people": random.choice(people_pool),
+    "object": random.choice(object_pool),
+    "image_style": random.choice(image_style_pool),
+    "image_type": random.choice(image_type_pool)
   }
 
   # generate prompt texts
@@ -102,14 +98,14 @@ def main():
 
   # generate an organization name
   messages.append(package_message('user', f'Generate a random organization name for this {prompt["event_type"]}.'))
-  organization_name = get_response(messages)
+  organization_name = get_response(messages).strip('.').strip('"').strip("'") # remove punctuation
   print(f'Organization name: {organization_name}') 
 
   # generate corresponding poster
   response = openai.Image.create(
     prompt=prompt['image_prompt'],
     n=1,
-    size="1024x1024"
+    size=f"{IMAGE_WIDTH}x{IMAGE_HEIGHT}"
   )
 
   # timestamp for saving files
@@ -131,9 +127,48 @@ def main():
   with open(generated_image_filepath, "wb") as image_file:
       image_file.write(generated_image)  # write the image to the file
 
+  # pick a random font on this Mac
+  font_path = random.choice(glob.glob('/System/Library/Fonts/*.ttf'))
+
+  # pick a non-italicized font
+  keep_going = True
+  while keep_going:
+    font_path = random.choice(glob.glob('/System/Library/Fonts/*.ttf'))
+    keep_going = not ('Italic' in font_path or 'Oblique' in font_path or not font_path[0].isalpha())
+
+  # use Pillow to superimpose text on the image
+  image = Image.open(generated_image_filepath)
+  draw = ImageDraw.Draw(image)
+
+  # calculate a font size that fits within 1024 pixels
+  font_size = 1
+  font = ImageFont.truetype(font_path, font_size)
+  while font.getbbox(organization_name)[2] < IMAGE_WIDTH - IMAGE_PADDING*2:
+    font_size += 1
+    font = ImageFont.truetype(font_path, font_size)
+  # pick a random color in the format (r, g, b)
+  color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+  # get a contrasting background color
+  background_color = (255 - color[0], 255 - color[1], 255 - color[2])
+  # draw the text to either the top or bottom of the image
+  if random.random() > 0.5:
+    # draw at bottom
+    # draw a randomly-colored solid background behind the text
+    draw.rectangle((0, IMAGE_HEIGHT - font.getbbox(organization_name)[3] - IMAGE_PADDING*2, IMAGE_WIDTH, IMAGE_HEIGHT), fill=background_color)
+    draw.text((IMAGE_PADDING, IMAGE_HEIGHT - IMAGE_PADDING - font.getbbox(organization_name)[3]), organization_name, color, font=font)
+  else:
+    # draw at top
+    # draw a randomly-colored solid background behind the text
+    draw.rectangle((0, 0, IMAGE_WIDTH, font.getbbox(organization_name)[3] + IMAGE_PADDING*2), fill=background_color)
+    draw.text((IMAGE_PADDING, IMAGE_PADDING), organization_name, color, font=font)
+  
+  # save the updated image
+  image.save(generated_image_filepath)
+
+
   # output
   print(f'Prompt text: {prompt["text_prompt"]}')
-  print(promotion_text)
+  print('\n', promotion_text, '\n')
   print(f'Image prompt: {prompt["image_prompt"]}')
   print(f'Image file: {generated_image_filepath}')
 
