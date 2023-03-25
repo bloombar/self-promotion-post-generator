@@ -99,7 +99,7 @@ def main():
   # generate an organization name
   messages.append(package_message('user', f'Generate a random organization name for this {prompt["event_type"]}.'))
   organization_name = get_response(messages).strip('.').strip('"').strip("'") # remove punctuation
-  print(f'Organization name: {organization_name}') 
+  print('\n', f'Organization name: {organization_name}') 
 
   # generate corresponding poster
   response = openai.Image.create(
@@ -162,15 +162,14 @@ def main():
     # draw a randomly-colored solid background behind the text
     draw.rectangle((0, 0, IMAGE_WIDTH, font.getbbox(organization_name)[3] + IMAGE_PADDING*2), fill=background_color)
     draw.text((IMAGE_PADDING, IMAGE_PADDING), organization_name.upper(), color, font=font)
-  
+
   # save the updated image
   image.save(generated_image_filepath)
 
-
   # output
-  print(f'Prompt text: {prompt["text_prompt"]}')
+  # print(f'Prompt text: {prompt["text_prompt"]}')
   print('\n', promotion_text, '\n')
-  print(f'Image prompt: {prompt["image_prompt"]}')
+  # print(f'Image prompt: {prompt["image_prompt"]}')
   print(f'Image file: {generated_image_filepath}')
 
 
