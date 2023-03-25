@@ -6,4 +6,5 @@ Python tool to generate and post fake self-promotional material to LinkedIn. Use
 
 You must first create an OpenAI account and get an API key. Then, create a `.env` file in the root directory and add your API key to it. See the file named `env.example` for example.
 
-Then run `main.py` and the generated images and text will be placed in the `posts` directory.
+Install dependencies with `pip install -r requirements.txt` or `pipenv install`.
+Run `main.py` and the generated images and text will be placed in the `posts` directory.

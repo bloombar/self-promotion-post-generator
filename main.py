@@ -19,11 +19,11 @@ def openai_connect():
   # models = openai.Model.list()
 
 # prompt settings
-adjective_pool = ['social', 'cloud', 'community', 'naturopathic', 'diverse', 'integrative', 'machine', 'clean', 'data', 'education', 'academic', 'experience', 'software', 'data', 'plant-based', 'mycological', 'sustainable', 'green', 'ethical', "electric", 'product', 'user experience', 'innovation', 'computer-assisted', 'equity']
-topic_pool = ["learning", "science", 'STEM', "automation", "innovation", "design", 'thinking', "development", "technology", 'programming', 'introspection', "privacy", 'AI', 'mining', 'insights', 'unicycling', 'design', 'innovation', 'entrepreneurship', 'fabrication', 'power']
-action_pool = ['shipping', 'showing', 'debating', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'funding', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
+adjective_pool = ['social', 'cloud', 'community', 'naturopathic', 'diverse', 'integrative', 'machine', 'clean', 'data', 'education', 'academic', 'marketing', 'experience', 'software', 'data', 'plant-based', 'mycological', 'sustainable', 'green', 'ethical', "electric", 'product', 'user experience', 'innovation', 'computer-assisted', 'equity']
+topic_pool = ['biohacking', 'meat', 'future', "learning", "science", 'STEM', "automation", "innovation", "design", 'thinking', "development", "technology", 'programming', 'introspection', "privacy", 'AI', 'mining', 'insights', 'unicycling', 'design', 'innovation', 'entrepreneurship', 'fabrication', 'power', 'energy']
+action_pool = ['shipping', 'showing', 'debating', 'researching', 'meditating', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'funding', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
 utterance_type_pool = ['announcing', 'saying how proud i am of', 'telling you about', 'sharing', 'super hyped to share', 'riffing', 'helping you to understand', 'not too proud to say']
-event_pool = ['product launch', 'incubator', 'mentorship', 'panel', 'quest', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
+event_pool = ['retreat', 'sabbatical', 'product launch', 'incubator', 'mentorship', 'panel', 'quest', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
 people_pool = ["business people", "yoga gurus", "young adults in tee shirts", "diverse children", "a beautiful woman", "academics", "women over 50", "middle-aged men"]
 object_pool = ["computer", "phone", "futuristic device", "electric unicycle", "loom", 'ship', 'drone', 'flower', 'gear', 'supernatural power', 'cloud', 'antique tv', 'fjord', 'old wooden house', 'hammer', 'sickle', 'sun']
 image_type_pool = ['photo', 'drawing', 'painting', 'sketch', 'illustration', 'infographic', 'chart']
@@ -155,12 +155,12 @@ def main():
     # draw at bottom
     # draw a randomly-colored solid background behind the text
     draw.rectangle((0, IMAGE_HEIGHT - font.getbbox(organization_name)[3] - IMAGE_PADDING*2, IMAGE_WIDTH, IMAGE_HEIGHT), fill=background_color)
-    draw.text((IMAGE_PADDING, IMAGE_HEIGHT - IMAGE_PADDING - font.getbbox(organization_name)[3]), organization_name, color, font=font)
+    draw.text((IMAGE_PADDING, IMAGE_HEIGHT - IMAGE_PADDING - font.getbbox(organization_name)[3]), organization_name.upper(), color, font=font)
   else:
     # draw at top
     # draw a randomly-colored solid background behind the text
     draw.rectangle((0, 0, IMAGE_WIDTH, font.getbbox(organization_name)[3] + IMAGE_PADDING*2), fill=background_color)
-    draw.text((IMAGE_PADDING, IMAGE_PADDING), organization_name, color, font=font)
+    draw.text((IMAGE_PADDING, IMAGE_PADDING), organization_name.upper(), color, font=font)
   
   # save the updated image
   image.save(generated_image_filepath)
