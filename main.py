@@ -138,7 +138,7 @@ def main():
 
   # use Pillow to superimpose text on the image
   image = Image.open(generated_image_filepath)
-  draw = ImageDraw.Draw(image)
+  draw = ImageDraw.Draw(image, 'RGBA')
 
   # calculate a font size that fits within 1024 pixels
   font_size = 1
@@ -146,10 +146,11 @@ def main():
   while font.getbbox(organization_name)[2] < IMAGE_WIDTH - IMAGE_PADDING*2:
     font_size += 1
     font = ImageFont.truetype(font_path, font_size)
-  # pick a random color in the format (r, g, b)
+  # pick a random color in the format (r, g, b, a)
   color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
   # get a contrasting background color
-  background_color = (255 - color[0], 255 - color[1], 255 - color[2])
+  background_color = (255 - color[0], 255 - color[1], 255 - color[2], random.randint(124, 255))
+ 
   # draw the text to either the top or bottom of the image
   if random.random() > 0.5:
     # draw at bottom
