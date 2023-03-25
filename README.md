@@ -11,5 +11,6 @@ Run `main.py` and the generated images and text will be placed in the `posts` di
 
 ## Bugs
 
+- Doesn't yet post to LinkedIn automatically... looking into using [Automate-LinkedIn](https://pypi.org/project/Automate-LinkedIn/) for this.
 - Currently looks for fonts in the `/System/Library/Fonts/`, which works only on Macs... easy to change for PC.
 - Currently picks a random font, and sometimes gets illegible fonts.... need to be more selective
