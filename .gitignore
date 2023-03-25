@@ -1,3 +1,7 @@
+# don't track generated text and images
+posts/*.png
+posts/*.txt
+
 # mac junk
 .DS_Store
 
