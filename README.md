@@ -8,3 +8,8 @@ You must first create an OpenAI account and get an API key. Then, create a `.env
 
 Install dependencies with `pip install -r requirements.txt` or `pipenv install`.
 Run `main.py` and the generated images and text will be placed in the `posts` directory.
+
+## Bugs
+
+- Currently looks for fonts in the `/System/Library/Fonts/`, which works only on Macs... easy to change for PC.
+- Currently picks a random font, and sometimes gets illegible fonts.... need to be more selective

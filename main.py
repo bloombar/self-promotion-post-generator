@@ -143,7 +143,7 @@ def main():
   # calculate a font size that fits within 1024 pixels
   font_size = 1
   font = ImageFont.truetype(font_path, font_size)
-  while font.getbbox(organization_name)[2] < IMAGE_WIDTH - IMAGE_PADDING*2:
+  while font.getbbox(organization_name)[2] < (IMAGE_WIDTH - IMAGE_PADDING*2):
     font_size += 1
     font = ImageFont.truetype(font_path, font_size)
   # pick a random color in the format (r, g, b, a)
