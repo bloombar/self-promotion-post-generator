@@ -80,8 +80,12 @@ def main():
     package_message('system', "You are a helpful assistant that is helping to write promotional materials for an individual and a team."),
     package_message('user', 'Write a one sentence, informal first person message explaining my sharing at a education design award.  Give the event a fake name, and optionally a specific location and a random date within a few weeks after 2023-03-24 23:06:15.925451.'),
     package_message('assistant', "Excited to share that I'll be presenting at the upcoming InnovateEd Conference in New York City on April 14th about our award-winning education design project.  Hope to see some of you there!"),
+    package_message('user', f'Generate a random organization name for this conference.'),
+    package_message('assistant', 'The InnovateEd Learning Company'),
     package_message('user', 'Write a one sentence, informal first person message announcing my professing at a software power class.  Give the event a fake name, and optionally a specific location and a random date within a few weeks after 2023-03-24 23:10:01.481857.'),
     package_message('assistant', "Just wanted to let you know that I'll be speaking at the CodeCon West conference in San Francisco on May 5th, where I'll be sharing some tips and tricks for building powerful software!  Should be a great event."),
+    package_message('user', f'Generate a random organization name for this conference.'),
+    package_message('assistant', 'Intellisys Inc.'),
   ]
 
   # generate prompt

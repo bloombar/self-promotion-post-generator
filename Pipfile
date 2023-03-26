@@ -8,8 +8,8 @@ openai = "*"
 python-dotenv = "*"
 pillow = "*"
 pip = "*"
-automate-linkedin = "*"
-easy-py-selenium = "*"
+requests = "*"
+selenium = "*"
 
 [dev-packages]
 
