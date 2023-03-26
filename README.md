@@ -2,6 +2,21 @@
 
 Python tools to generate and post fake self-promotional material to LinkedIn. Uses OpenAI's GPT-3 API to generate fake self-promotional material text and images and then posts them to LinkedIn (ok... the auto-posting part is still not reliably working because LinkedIn is trying to block it, so you may need to manually post the generated text and images for now).
 
+## Examples
+
+![Mushroom Matters](./posts/examples/20230325-011447-image.png)
+Can't believe I was able to launch my own mycological business at the FungiFest event in Portland on June 1st - so proud of all the hard work that went into it! #mycology #entrepreneurship #productlaunch #portlandfungifest
+
+---
+
+![Greentech Innovations](./posts/examples/20230325-012748-image.png)
+OMG I just found out I was chosen for the GreenGenius Biohacking Fellowship and I'll be spending the summer in Hawaii learning all about sustainable living - can't wait to share my experience with you all! #GreenGeniusFellowship #BiohackingSabbatical #SustainableLiving #HawaiiHereICome
+
+---
+
+![Unicycle Tech](./posts/examples/20230325-213744-image.png)
+I'm super proud of how well our team performed at the recent Hack-a-Ride event in London, where we orchestrated a diverse group of unicycling enthusiasts to develop some amazing new tech - can't wait to see what we can achieve next! #HackARide #UnicycleTech #RideTheFuture
+
 ## Installation
 
 You must first create an OpenAI account and get an API key. Then, create a `.env` file in the root directory and add your API key to it. See the file named `env.example` for details of the format of that file.
