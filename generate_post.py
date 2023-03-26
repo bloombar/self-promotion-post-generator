@@ -1,4 +1,7 @@
+#! /usr/bin/env python3
+
 import glob, os, random, requests
+import platform
 from datetime import datetime
 from dotenv import load_dotenv
 import openai
@@ -18,18 +21,24 @@ def openai_connect():
   # print(f'Using API key: {openai.api_key}')
   # models = openai.Model.list()
 
-# prompt settings
-adjective_pool = ['social', 'cloud', 'community', 'naturopathic', 'diverse', 'integrative', 'machine', 'clean', 'data', 'education', 'academic', 'marketing', 'experience', 'software', 'data', 'plant-based', 'mycological', 'sustainable', 'green', 'ethical', "electric", 'product', 'user experience', 'innovation', 'computer-assisted', 'equity']
-topic_pool = ['biohacking', 'meat', 'future', "learning", "science", 'STEM', "automation", "innovation", "design", 'thinking', "development", "technology", 'programming', 'introspection', "privacy", 'AI', 'mining', 'insights', 'unicycling', 'design', 'innovation', 'entrepreneurship', 'fabrication', 'power', 'energy']
-action_pool = ['shipping', 'showing', 'debating', 'researching', 'meditating', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'funding', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
-utterance_type_pool = ['announcing', 'saying how proud i am of', 'telling you about', 'sharing', 'super hyped to share', 'riffing', 'helping you to understand', 'not too proud to say']
-event_pool = ['retreat', 'sabbatical', 'product launch', 'incubator', 'mentorship', 'panel', 'quest', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
-people_pool = ["business people", "yoga gurus", "young adults in tee shirts", "diverse children", "a beautiful woman", "academics", "women over 50", "middle-aged men"]
-object_pool = ["computer", "phone", "futuristic device", "electric unicycle", "loom", 'ship', 'drone', 'flower', 'gear', 'supernatural power', 'cloud', 'antique tv', 'fjord', 'old wooden house', 'hammer', 'sickle', 'sun']
+# prompt settings pools - any prompt will pick some combination of these.
+# ... eventually, we could ask GPT to generate these for us, but let's customize them for now
+adjective_pool = ['clean', 'tight', 'social', 'cloud', 'community', 'naturopathic', 'diverse', 'integrative', 'machine', 'clean', 'data', 'education', 'academic', 'marketing', 'experience', 'software', 'data', 'plant-based', 'mycological', 'sustainable', 'green', 'ethical', "electric", 'product', 'user experience', 'innovation', 'computer-assisted', 'equity']
+topic_pool = ['Roda Polo', 'biohacking', 'fake meat', 'future', "learning", "science", 'women', 'diversity', "automation", "innovation", "design", 'thinking', "development", "technology", 'programming', 'introspection', "privacy", 'AI', 'mining', 'insights', 'unicycling', 'design', 'innovation', 'entrepreneurship', 'fabrication', 'power', 'energy']
+action_pool = ['wheeling', 'joining the team', 'shipping', 'showing', 'debating', 'researching', 'meditating', 'listening', 'proud of', 'honored to be part of', 'being humbled by', 'judging', 'donating', 'funding', 'joining the team', 'starting a new position', 'speaking', 'organizing', 'presenting', 'sharing', 'orchestrating', 'winning', 'awarding', 'selecting', 'receiving']
+utterance_type_pool = ['driving home', 'announcing', 'saying how proud i am of', 'telling you about', 'sharing', 'super hyped to disclose', 'riffing', 'helping you to understand', 'not too proud to say']
+event_pool = ['fast', 'retreat', 'sabbatical', 'product launch', 'incubator', 'mentorship', 'panel', 'quest', 'IPO', 'conference', 'workshop', 'talk', 'webinar', 'keynote', 'seminar', 'class', 'course', 'training', 'workshop', 'award', 'grant', 'scholarship', 'fellowship', 'competition', 'hackathon']
+# settings pools additionally used for generating images...
+people_pool = ['polo players', "business people", "yoga gurus", "young adults in cottom tee shirts", "diverse children", "a beautiful woman", "academics", "women over 50", "middle-aged men"]
+object_pool = ['cloud', 'farmbot', 'brain', 'computer', "phone", "futuristic device", "electric unicycle", "loom", 'ship', 'drone', 'flower', 'gear', 'supernatural power', 'cloud', 'antique tv', 'fjord', 'old wooden house', 'hammer', 'sickle', 'sun']
 image_type_pool = ['photo', 'drawing', 'painting', 'sketch', 'illustration', 'infographic', 'chart']
-image_style_pool = ['soviet brutalist', 'black-and-white', 'landscape', 'futuristic', 'wide-angle', 'surreal', 'pop art', 'photorealistic', 'cubist']
+image_style_pool = ['soviet brutalist', 'black-and-white', 'academic', 'landscape', 'futuristic', 'wide-angle', 'surreal', 'pop art', 'photorealistic', 'cubist']
 
 def random_prompt():
+  '''
+  Returns randomly-picked settings that can be used later to prompt GPT-3 to generate text and an image.
+  @return: a dictionary of prompt settings
+  '''
   # randomize prompt settings
   prompt = {
     "topic": f'{random.choice(adjective_pool)} {random.choice(topic_pool)}',
@@ -51,9 +60,10 @@ def random_prompt():
 
 def package_message(role, content):
   '''
-  Returns a message object for OpenAI API
+  Returns a message object suitable for sending as a 'message' to the OpenAI API
   @param role: 'user', 'system', or 'assistant'
   @param content: the message content to send to the bot
+  @return a message object
   '''
   message = {
     "role": role,
@@ -64,6 +74,8 @@ def package_message(role, content):
 def get_response(messages):
   '''
   Returns a response from OpenAI API, given the inputes in 'messages'
+  @param messages: a list of message objects to send to ChatGPT for consideration
+  @return a string response from the bot
   '''
   response = openai.ChatCompletion.create(
       model=os.getenv("OPENAI_MODEL"),
@@ -71,11 +83,11 @@ def get_response(messages):
       temperature=0.8,
   )
   messages.append(package_message('assistant', response['choices'][0]['message']['content']))
-  response_text = response['choices'][0]['message']['content']
+  response_text = response['choices'][0]['message']['content'] # assuming only one choice, which is the default
   return response_text
 
 def main():
-  # seed with initial message with system instructions
+  # seed with initial message with system instructions, including example 'user' prompts and how the 'assistant' bot would ideally respond to them
   messages = [
     package_message('system', "You are a helpful assistant that is helping to write promotional materials for an individual and a team."),
     package_message('user', 'Write a one sentence, informal first person message explaining my sharing at a education design award.  Give the event a fake name, and optionally a specific location and a random date within a few weeks after 2023-03-24 23:06:15.925451.'),
@@ -88,14 +100,14 @@ def main():
     package_message('assistant', 'Intellisys Inc.'),
   ]
 
-  # generate prompt
+  # generate random prompt for a linkedin post
   prompt = random_prompt()
   messages.append(package_message('user', prompt['text_prompt'])) # attach the text prompt to the inputs
 
-  # generate text
+  # generate text response
   promotion_text = get_response(messages)
 
-  # generate some random hash tags
+  # generate some random hash tags to go along with this
   messages.append(package_message('user', "Generate between 1 and 4 random hash tags to go along with this."))
   hash_tags = get_response(messages)
   promotion_text += ' ' + hash_tags
@@ -103,18 +115,18 @@ def main():
   # generate an organization name
   messages.append(package_message('user', f'Generate a random organization name for this {prompt["event_type"]}.'))
   organization_name = get_response(messages).strip('.').strip('"').strip("'") # remove punctuation
-  print('\n', f'Organization name: {organization_name}') 
+  # print('\n', f'Organization name: {organization_name}') 
 
-  # generate corresponding poster
+  # generate corresponding poster image
   response = openai.Image.create(
     prompt=prompt['image_prompt'],
     n=1,
     size=f"{IMAGE_WIDTH}x{IMAGE_HEIGHT}"
   )
 
-  # timestamp for saving files
+  # timestamp for saving files with unique names
   timestamp = datetime.now().strftime("%Y%m%d-%H%M%S")
-  posts_dir = os.path.join(os.getcwd(), "posts") # save into `images` subdirectory
+  posts_dir = os.path.join(os.getcwd(), "posts") # save into `posts` subdirectory
 
   # save the response text to file
   response_text_name = f'{timestamp}-post.txt'  # any name you like; the filetype should be .txt
@@ -132,13 +144,23 @@ def main():
       image_file.write(generated_image)  # write the image to the file
 
   # pick a random font on this Mac
-  font_path = random.choice(glob.glob('/System/Library/Fonts/*.ttf'))
-
-  # pick a non-italicized font
-  keep_going = True
-  while keep_going:
+  # note that sometimes unrenderable fonts are picked which messes up the image... so may want to limit font choices in the future
+  # determine whether on a mac or pc
+  if platform.system() == 'Windows':
+    # Windows
+    font_path = random.choice(glob.glob('C:\\Windows\\Fonts\\*.ttf'))
+  elif platform.system() == 'Linux':
+    # Linux
+    font_path = random.choice(glob.glob('/usr/share/fonts/truetype/*.ttf'))
+  else: #if platform.system() == 'Darwin':
+    # Mac
     font_path = random.choice(glob.glob('/System/Library/Fonts/*.ttf'))
-    keep_going = not ('Italic' in font_path or 'Oblique' in font_path or not font_path[0].isalpha())
+
+  # # pick a non-italicized font
+  # keep_going = True
+  # while keep_going:
+  #   font_path = random.choice(glob.glob('/System/Library/Fonts/*.ttf'))
+  #   keep_going = not ('Italic' in font_path or 'Oblique' in font_path or not font_path[0].isalpha())
 
   # use Pillow to superimpose text on the image
   image = Image.open(generated_image_filepath)
