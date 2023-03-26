@@ -14,8 +14,8 @@ OMG I just found out I was chosen for the GreenGenius Biohacking Fellowship and 
 
 ---
 
-![Unicycle Tech](./posts/examples/20230325-213744-image.png)
-I'm super proud of how well our team performed at the recent Hack-a-Ride event in London, where we orchestrated a diverse group of unicycling enthusiasts to develop some amazing new tech - can't wait to see what we can achieve next! #HackARide #UnicycleTech #RideTheFuture
+![Data Mentor](./posts/examples/20230325-214201-image.png)
+Just found out that I'll be receiving the "Mentor of the Year" award at the upcoming DataCon East conference in Boston on June 8th - can't wait to celebrate with my data science community! #DataConEast #MentorshipMatters #CelebratingSuccess #DataScienceCommunity
 
 ## Installation
 
