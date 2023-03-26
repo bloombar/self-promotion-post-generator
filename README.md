@@ -19,7 +19,7 @@ Just found out that I'll be receiving the "Mentor of the Year" award at the upco
 
 ## Installation
 
-You must first create an OpenAI account and get an API key. Then, create a `.env` file in the root directory and add your API key to it. See the file named `env.example` for details of the format of that file.
+You must first create an [OpenAI account](https://platform.openai.com/) and create an API key. Then, create a `.env` file in the root directory and add your API key to it. See the file named `env.example` for details of the format of that file.
 
 ### Selenium
 
